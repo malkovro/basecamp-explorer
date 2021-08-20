@@ -1,0 +1,27 @@
+{
+	"name": "BKE",
+	"description": "Basecamp KPI Explorer",
+	"repository": "https://github.com/malkovro/basecamp-explorer",
+	"keywords": ["basecamp", "kpi", "ruby"],
+	"env": {
+		"BASECAMP_INTEGRATION_NAME": {
+			"required": true,
+			"description": "Name set on User-Agent HTTP Request to Basecamp API",
+			"value": "Basecamp KPI Extractor"
+		},
+		"BASECAMP_INTEGRATION_CONTACT_EMAIL": {
+			"description": "Email set on User-Agent HTTP Request to Basecamp API",
+			"value": "leo@barkibu.com"
+		},
+		"BASECAMP_INTEGRATION_ACCESS_KEY": {
+			"description": "Access Key for your integration"
+		},
+		"BASECAMP_INTEGRATION_ACCESS_SECRET": {
+			"description": "Access Secret for your integration"
+		},
+		"BASECAMP_INTEGRATION_REDIRECT_URL": {
+			"description": "Redirect URI for your integration",
+			"value": "http://notyet.barkibu.com"
+		}
+	}
+}

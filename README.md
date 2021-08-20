@@ -61,4 +61,4 @@ What this pseudo-code is bad at?
 
 ### _Can we deploy with a one-click button on Heroku and get those lead time through click-click ?_
 
-🚀🚀🚀
+[![Deploy Me](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
