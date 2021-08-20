@@ -22,6 +22,10 @@
 		"BASECAMP_INTEGRATION_REDIRECT_URL": {
 			"description": "Redirect URI for your integration",
 			"value": "http://notyet.barkibu.com"
+		},
+		"UI_SESSION_SECRET": {
+			"description": "Session secret for the UI",
+			"generator": "secret"
 		}
 	}
 }
