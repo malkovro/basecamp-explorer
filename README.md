@@ -27,3 +27,38 @@ irb(main):001:0>
 ```
 
 Now you have a irb session with an authenticated client for the account you selected ready to hack!
+
+## What's next on my plate
+
+### _Can we estimate the lead time of a todo ?_
+
+Pseudo-code
+
+```ruby
+def lead_time_estimate(todo)
+  return unless todo.completed?
+
+  pr_comment = todo.detect &:mention_prs?
+
+  return unless pr_comment
+
+  pr = PR.fetch(pr_comment.pr_number)
+
+  work_started_comment = todo.detect &:work_started?
+
+  return unless work_started_comment
+
+  pr.find_release.created_at - work_started_comment.created_at
+end
+```
+
+What this pseudo-code is bad at?
+
+- Todos were not moved to in progress when work actually started... 🤷🏽 Nothing I can do ...
+- PR not mentioned on the Todo... 🤷🏽 Nothing I can do ...
+- Multiple todos on the same PR... We should group by PR and take the biggest _lead_time_
+- Task is marked as complete before actually being part of a Release 👽🗿
+
+### _Can we deploy with a one-click button on Heroku and get those lead time through click-click ?_
+
+🚀🚀🚀
