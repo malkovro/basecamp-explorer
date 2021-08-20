@@ -6,23 +6,27 @@ module Basecamp
 
     attr_accessor :client, :access_token, :redirect_url
 
-    def initialize(access_key: ENV['BASECAMP_INTEGRATION_ACCESS_KEY'], 
-                   access_secret: ENV['BASECAMP_INTEGRATION_ACCESS_SECRET'], 
+    def initialize(access_key: ENV['BASECAMP_INTEGRATION_ACCESS_KEY'],
+                   access_secret: ENV['BASECAMP_INTEGRATION_ACCESS_SECRET'],
                    redirect_url: ENV['BASECAMP_INTEGRATION_REDIRECT_URL'])
       self.redirect_url = redirect_url
-      self.client = OAuth2::Client.new(access_key, access_secret, site: AUTHORIZATION_BASE_URL, authorize_url: AUTHORIZE_URL, token_url: TOKEN_URL)
+      self.client = OAuth2::Client.new(access_key, access_secret, site: AUTHORIZATION_BASE_URL,
+                                                                  authorize_url: AUTHORIZE_URL, token_url: TOKEN_URL)
     end
 
     def authorize_url
-      client.auth_code.authorize_url(redirect_uri: redirect_url) + '&type=web_server'
+      "#{client.auth_code.authorize_url(redirect_uri: redirect_url)}&type=web_server"
     end
 
-    def token(code)
+    def fetch_token(code)
       @access_token = client.auth_code.get_token(code, redirect_uri: redirect_url, type: 'web_server')
+
+      self
     end
 
     def accounts
-      request = HTTParty.get(AUTHORIZATION_BASE_URL + '/authorization.json', headers: { 'Authorization': "Bearer #{access_token.token}" })
+      request = HTTParty.get("#{AUTHORIZATION_BASE_URL}/authorization.json",
+                             headers: { 'Authorization': "Bearer #{access_token.token}" })
       request.parsed_response['accounts']
     end
 

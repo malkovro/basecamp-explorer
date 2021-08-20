@@ -15,4 +15,3 @@ require_relative 'models/todoset'
 require_relative 'models/todolist'
 require_relative 'models/todo'
 require_relative 'models/comment'
-
