@@ -1,9 +1,7 @@
 module Basecamp
   class Account < Model
     def projects
-      client.fetch("#{href}/projects.json").map do |project|
-        Project.new(client, project)
-      end
+      fetch_list "#{href}/projects.json", Project
     end
   end
 end

@@ -6,6 +6,16 @@ module Basecamp
       @client = client
       super(args)
     end
+
+    def fetch(url, child_class)
+      child_class.new(client, client.fetch(url))
+    end
+
+    def fetch_list(url, child_class)
+      client.fetch(url).map do |model|
+        child_class.new(client, model)
+      end
+    end
   end
 end
 

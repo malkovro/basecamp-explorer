@@ -3,9 +3,7 @@ module Basecamp
     def comments
       return [] unless comments_count.positive?
 
-      client.fetch(comments_url).map do |comment|
-        Comment.new(client, comment)
-      end
+      fetch_list comments_url, Comment
     end
   end
 end

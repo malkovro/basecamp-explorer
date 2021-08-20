@@ -7,7 +7,7 @@ module Basecamp
     def todoset
       return nil unless todoset_dock
 
-      Todoset.new(client, client.fetch(todoset_dock['url']))
+      fetch todoset_dock['url'], Todoset
     end
   end
 end
