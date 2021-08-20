@@ -26,8 +26,8 @@ module Basecamp
       request.parsed_response['accounts']
     end
 
-    def authenticated_client(account)
-      Basecamp::Client.new(access_token, account: account)
+    def authenticated_client
+      Basecamp::Client.new(access_token)
     end
   end
 end
