@@ -27,7 +27,7 @@ module Basecamp
     end
 
     def authenticated_client
-      Basecamp::Client.new(access_token)
+      @authenticated_client ||= Basecamp::Client.new(access_token)
     end
   end
 end

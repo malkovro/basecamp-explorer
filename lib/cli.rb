@@ -8,14 +8,16 @@ code = $stdin.gets.strip
 
 $negotiator.token(code)
 
-accounts = $negotiator.accounts
+ACCOUNTS = $negotiator.accounts.map do |account|
+  Basecamp::Account.new($negotiator.authenticated_client, account)
+end
 
-if accounts.count > 0
+if ACCOUNTS.count > 0
   $stdout.puts '========== YOU HAVE ACCESS TO THE FOLLOWING ACCOUNTS ========'
-  accounts.each_with_index do |account, index|
-    $stdout.puts "##{account['id']} - #{account['name']}"
+  ACCOUNTS.each_with_index do |account, index|
+    $stdout.puts "##{account.id} - #{account.name}"
   end
 end
 
 $client = $negotiator.authenticated_client
-$stdout.puts "You can play around with $client authenticated over those accounts! Good hacking!"
+$stdout.puts "The constant ACCOUNTS holds your accounts ready for play! Good hacking!"
