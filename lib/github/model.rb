@@ -1,9 +1,10 @@
 module Github
-  class Model < OpenStruct
-    attr_reader :client
+  class Model < SimpleDelegator
+    attr_reader :client, :repository
 
-    def initialize(client, args)
+    def initialize(client, repository, args)
       @client = client
+      @repository = repository
       super(args)
     end
   end
