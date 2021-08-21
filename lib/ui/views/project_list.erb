@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Basecamp KPI Extractor</title>
+  </head>
+  <body>
+    <h1>Here are the projects you are involved in 👷🏽</h1>
+    <ul>
+      <% account.projects.each do |project| %>
+        <li><a href=<%= "/bc3-account/#{account.id}/projects/#{project.id}" %>><%= project.name %></a></li>
+      <% end %>
+    </ul>
+  </body>
+</html>

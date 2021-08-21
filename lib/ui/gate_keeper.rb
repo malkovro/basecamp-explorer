@@ -11,10 +11,20 @@ class GateKeeper
     negotiators[uuid] = Basecamp::OauthNegotiator.new
   end
 
+  def current(session)
+    negotiators[uuid(session)]
+  end
+
   def let_in(session, code)
-    uuid = session[self.class.name]
+    uuid = uuid(session)
     return unless uuid && negotiators[uuid]
 
     negotiators[uuid].fetch_token(code)
+  end
+
+  private
+
+  def uuid(session)
+    session[self.class.name]
   end
 end
