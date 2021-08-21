@@ -19,4 +19,16 @@ if ACCOUNTS.count.positive?
   end
 end
 
-$stdout.puts 'The constant ACCOUNTS holds your accounts ready for play! Good hacking!'
+$stdout.puts 'The constant ACCOUNTS holds your accounts ready for play!'
+
+$stdout.puts "\nLet' setup your Github connection now:"
+
+gh_negotiator = Github::OauthNegotiator.new
+p gh_negotiator.authorize_url
+
+$stdout.puts 'Visit the link above, accept and type the code you received:'
+code = $stdin.gets.strip
+
+gh_negotiator.fetch_token(code)
+GH_CLIENT = gh_negotiator.authenticated_client
+$stdout.puts '========== ALL SET... HAPPY HACKING!! ========'
