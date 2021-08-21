@@ -23,6 +23,16 @@
 			"description": "Redirect URI for your integration",
 			"value": "http://notyet.barkibu.com"
 		},
+		"GITHUB_CLIENT_ID": {
+			"description": "Client ID for your Github Application"
+		},
+		"GITHUB_CLIENT_SECRET": {
+			"description": "Client Secret for Github Application"
+		},
+		"GITHUB_REDIRECT_URI": {
+			"description": "Redirect URI for your Github Application",
+			"value": "http://bke-test.herokuapp.com/github/token"
+		},
 		"UI_SESSION_SECRET": {
 			"description": "Session secret for the UI",
 			"generator": "secret"

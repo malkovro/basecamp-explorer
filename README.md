@@ -8,6 +8,8 @@ Basecamp exposes a nice API to consumes its data, this project tries to wrap a H
 
 First things first, grab yourself an access key and access secret registering your own application on https://launchpad.37signals.com/integrations.
 
+Same goes for Github, create an application on: https://github.com/settings/applications/new.
+
 Copy the .env.example into .env and paste those there!
 
 ## Getting our hands dirty
