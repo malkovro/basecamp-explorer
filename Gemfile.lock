@@ -67,6 +67,12 @@ GEM
       rack (~> 2.2)
       rack-protection (= 2.1.0)
       tilt (~> 2.0)
+    sinatra-contrib (2.1.0)
+      multi_json
+      mustermann (~> 1.0)
+      rack-protection (= 2.1.0)
+      sinatra (= 2.1.0)
+      tilt (~> 2.0)
     tilt (2.0.10)
     unicode-display_width (2.0.0)
 
@@ -79,6 +85,7 @@ DEPENDENCIES
   oauth2
   rubocop
   sinatra
+  sinatra-contrib
 
 BUNDLED WITH
    2.2.25
