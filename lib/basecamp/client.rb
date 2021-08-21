@@ -14,7 +14,7 @@ module Basecamp
 
     def authorization_header
       # Nice TODO Check if the token is expired and do something if it is!!
-      { 'Authorization': "Bearer #{access_token.token}" }
+      { 'Authorization': "Bearer #{access_token}" }
     end
 
     def fetch(url)
