@@ -21,11 +21,15 @@ class BaseOauthNegotiator
   end
 
   def authorize_url
-    client.auth_code.authorize_url(redirect_uri: redirect_uri)
+    client.auth_code.authorize_url(redirect_uri: redirect_uri, scope: scopes.join(','))
+  end
+
+  def scopes
+    []
   end
 
   def fetch_token(code)
-    @access_token = client.auth_code.get_token(code, redirect_uri: redirect_uri)
+    @access_token = client.auth_code.get_token(code, redirect_uri: redirect_uri, scope: scopes.join(','))
 
     self
   end
