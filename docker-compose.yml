@@ -4,6 +4,9 @@ services:
   explorer:
     build: .
     working_dir: /usr/src/app
+    command: 'server'
+    ports:
+      - 3000:3000
     volumes:
       - .:/usr/src/app
       - bundle:/usr/local/bundle

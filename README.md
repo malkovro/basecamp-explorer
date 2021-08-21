@@ -2,6 +2,8 @@
 
 Basecamp exposes a nice API to consumes its data, this project tries to wrap a HTTParty client around those endpoints and provides a CLI to allow exploring its data.
 
+[![Deploy Me](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## Setup
 
 First things first, grab yourself an access key and access secret registering your own application on https://launchpad.37signals.com/integrations.
@@ -13,20 +15,26 @@ Copy the .env.example into .env and paste those there!
 Second, either launch `bundle install` locally 🐷 or if you like to keep things tidy use the docker setup:
 
 ```cmd
-docker-compose run --rm explorer
-/ *** /
+lfigea@Leos-MacBook-Pro basecamp_playground % docker-compose run --rm explorer cli
 Creating basecamp_playground_explorer_run ... done
-"https://launchpad.37signals.com/authorization/new?client_id=**********&redirect_uri=http%3A%2F%2Fnotyet.barkibu.com&response_type=code&type=web_server"
+"https://launchpad.37signals.com/authorization/new?client_id=********************&redirect_uri=https%3A%2F%2Fbke-test.herokuapp.com%2Ftoken&response_type=code&type=web_server"
 Visit the link above, accept and type the code you received:
-8735406d
-========== CHOOSE THE ACCOUNT ========
-Type 1 for Barkibu
-1
-You can play around in Barkibu with $client for this account! Good hacking!
+2b*****0
+========== YOU HAVE ACCESS TO THE FOLLOWING ACCOUNTS ========
+#3*****2 - Barkibu
+The constant ACCOUNTS holds your accounts ready for play! Good hacking!
 irb(main):001:0>
 ```
 
 Now you have a irb session with an authenticated client for the account you selected ready to hack!
+
+## Launching the UI in local
+
+To have the interface served on port http://localhost:3000 just run:
+
+```bash
+docker-composer up
+```
 
 ## What's next on my plate
 
@@ -58,7 +66,3 @@ What this pseudo-code is bad at?
 - PR not mentioned on the Todo... 🤷🏽 Nothing I can do ...
 - Multiple todos on the same PR... We should group by PR and take the biggest _lead_time_
 - Task is marked as complete before actually being part of a Release 👽🗿
-
-### _Can we deploy with a one-click button on Heroku and get those lead time through click-click ?_
-
-[![Deploy Me](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
