@@ -14,6 +14,10 @@ module Basecamp
                                                                   authorize_url: AUTHORIZE_URL, token_url: TOKEN_URL)
     end
 
+    def connected?
+      !access_token.nil?
+    end
+
     def authorize_url
       "#{client.auth_code.authorize_url(redirect_uri: redirect_url)}&type=web_server"
     end
@@ -25,9 +29,17 @@ module Basecamp
     end
 
     def accounts
+      return [] unless access_token
+
       request = HTTParty.get("#{AUTHORIZATION_BASE_URL}/authorization.json",
                              headers: { 'Authorization': "Bearer #{access_token.token}" })
       request.parsed_response['accounts']
+    end
+
+    def bc3_accounts
+      accounts.map do |account|
+        Basecamp::Account.new(authenticated_client, account)
+      end
     end
 
     def authenticated_client
