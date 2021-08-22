@@ -45,6 +45,9 @@
 		"UI_SESSION_SECRET": {
 			"description": "Session secret for the UI",
 			"generator": "secret"
+		},
+		"REDIS_URL": {
+			"description": "Redis connection URL"
 		}
 	}
 }
