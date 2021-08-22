@@ -99,6 +99,7 @@ DEPENDENCIES
   httparty
   oauth2
   octokit
+  redis
   rubocop
   sidekiq
   sinatra
