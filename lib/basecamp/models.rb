@@ -8,17 +8,16 @@ module Basecamp
     end
 
     def fetch(url, child_class)
-      child_class.new(client, client.fetch(url))
+      child_class.new(client, client.fetch(url).parsed_response)
     end
 
-    def fetch_list(url, child_class)
-      client.fetch(url).map do |model|
-        child_class.new(client, model)
-      end
+    def fetch_list(url, child_class, **params)
+      Paginable.new(client, url, child_class, params)
     end
   end
 end
 
+require_relative 'models/paginable'
 require_relative 'models/account'
 require_relative 'models/project'
 require_relative 'models/todoset'
