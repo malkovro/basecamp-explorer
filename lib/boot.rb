@@ -9,6 +9,6 @@ require_relative 'basecamp/client'
 require_relative 'basecamp/oauth_negotiator'
 require_relative 'basecamp/models'
 
-require_relative 'barkibu/comment'
+require_relative 'barkibu'
 
 require_relative 'github/github'
