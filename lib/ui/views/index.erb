@@ -9,16 +9,20 @@
       <dt>Basecamp Connection</dt>
       <% if accounts.any? %>
         <dd>
-        Up and running 
+        Up and running on
           <% accounts.each do |account| %>
             <a href=<%= "/bc3-account/#{account.id}/projects" %>><%= account.name %></a>
           <% end %>
         </dd>
       <% else %>
-        <dd><a href="/login">Connect</a></dd>
+        <dd><a href="/basecamp/login">Connect</a></dd>
       <% end %>
       <dt>Github</dt>
-      <dd>Not configured</dd>
+       <% if gh_connected %>
+        <dd>Connected 🤘</dd>
+      <% else %>
+        <dd><a href="/github/login">Connect</a></dd>
+      <% end %>
     </dl>
   </body>
 
