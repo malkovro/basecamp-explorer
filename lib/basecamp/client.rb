@@ -18,8 +18,7 @@ module Basecamp
     end
 
     def fetch(url)
-      request = self.class.get(url, headers: authorization_header)
-      request.parsed_response
+      self.class.get(url, headers: authorization_header)
     end
   end
 end
