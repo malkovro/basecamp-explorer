@@ -7,32 +7,40 @@
     <h1>Project <%= "#{project.name} (##{project.id})" %></h1>
     <h2>🕵🏽 KPIs for <b><%= todolist.title %></b> 📈</h2>
     <p>
-      <table>
-        <thead>
-          <tr>
-            <th>Todo Name</th>
-            <th>Work Started At</th>
-            <th>Released At</th>
-            <th>Release Version</th>
-            <th>PRs</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% reportable_todos.each do |todo| %>
+      <% if reportable_todos %>
+        <table>
+          <thead>
             <tr>
-              <td><%= todo.title %></td>
-              <td><%= todo.work_started_at %></td>
-              <td><%= todo.latest_release&.[](:created_at) %></td>
-              <td><%= todo.latest_release&.[](:tag_name) %></td>
-              <td>
-                <% todo.pull_requests.each do |pr| %>
-                  <a href=<%= pr.html_url%>><%= "##{pr.number}" %></a>&nbsp;
-                <% end %>
-              </td>
+              <th>Todo Name</th>
+              <th>Work Started At</th>
+              <th>Released At</th>
+              <th>Release Version</th>
+              <th>PRs</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <% reportable_todos.each do |todo| %>
+              <tr>
+                <td><%= todo.title %></td>
+                <td><%= todo.work_started_at %></td>
+                <td><%= todo.latest_release&.[](:created_at) %></td>
+                <td><%= todo.latest_release&.[](:tag_name) %></td>
+                <td>
+                  <% todo.pull_requests.each do |pr| %>
+                    <a href=<%= pr.html_url%>><%= "##{pr.number}" %></a>&nbsp;
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <% if job_failed %>
+          Report Failed ... Oops
+        <% else %>
+          Report Processing! Refresh the page in 10 seconds please!
+        <% end %>
+      <% end %>
     </p>
     <p>
       <a href=<%= todolist.app_url %>>See on Basecamp</a>

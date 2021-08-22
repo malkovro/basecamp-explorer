@@ -54,7 +54,8 @@ get '/bc3-account/:account_id/projects/:project_id' do
   erb :project_show, locals: { project: project, account: account, todolists: todolists }
 end
 
-get '/bc3-account/:account_id/projects/:project_id/todolist/:todolist' do
+get '/bc3-account/:account_id/projects/:project_id/todolist/:todolist_id' do
+  job_id = SecureRandom.uuid
   negotiator = GATE_KEEPER.current(session)
   basecamp_negotiator = negotiator&.basecamp
   gh_negotiator = negotiator&.github
@@ -62,13 +63,34 @@ get '/bc3-account/:account_id/projects/:project_id/todolist/:todolist' do
   redirect '/basecamp/login' unless basecamp_negotiator&.connected?
   redirect '/github/login' unless gh_negotiator&.connected?
 
-  gh_client = gh_negotiator.authenticated_client
+  StoreReportableWorker.perform_async(
+    gh_access_token: gh_negotiator.access_token.token,
+    basecamp_access_token: basecamp_negotiator.access_token.token,
+    account_id: params['account_id'].to_i,
+    project_id: params['project_id'].to_i,
+    todolist_id: params['todolist_id'].to_i,
+    id: job_id
+  )
+
+  redirect "#{request.url}/job/#{job_id}"
+end
+
+get '/bc3-account/:account_id/projects/:project_id/todolist/:todolist_id/job/:job_id' do
+  job_result = JobRepository.fetch(params[:job_id])
+  negotiator = GATE_KEEPER.current(session)
+  basecamp_negotiator = negotiator&.basecamp
+  gh_negotiator = negotiator&.github
+
+  redirect '/basecamp/login' unless basecamp_negotiator&.connected?
+  redirect '/github/login' unless gh_negotiator&.connected?
+
+  reportable_todos = (job_result.todos if job_result.is_a? ReportableTodos)
+  job_failed = job_result.is_a? JobRepository::FailedJob
+
   account = basecamp_negotiator.bc3_accounts.detect { |a| a.id.to_s == params['account_id'] }
   project = account.projects.detect { |p| p.id.to_s == params['project_id'] }
-  todolist = project.todoset.todolists.detect { |tl| tl.id.to_s == params['todolist'] }
-  bkb_todos = todolist.completed_todos.map { |todo| Barkibu::Todo.new(todo, gh_client) }
-  reportable_todos = bkb_todos.select(&:reportable?)
+  todolist = project.todoset.todolists.detect { |tl| tl.id.to_s == params['todolist_id'] }
 
   erb :todolist_show,
-      locals: { project: project, account: account, todolist: todolist, reportable_todos: reportable_todos }
+      locals: { project: project, account: account, todolist: todolist, reportable_todos: reportable_todos, job_failed: job_failed }
 end
