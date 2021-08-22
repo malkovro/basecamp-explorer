@@ -2,7 +2,16 @@
 	"name": "BKE",
 	"description": "Basecamp KPI Explorer",
 	"repository": "https://github.com/malkovro/basecamp-explorer",
-	"keywords": ["basecamp", "kpi", "ruby"],
+	"keywords": [
+		"basecamp",
+		"kpi",
+		"ruby"
+	],
+	"addons": [
+		{
+			"plan": "heroku-redis:hobby-dev"
+		}
+	],
 	"env": {
 		"BASECAMP_INTEGRATION_NAME": {
 			"required": true,
