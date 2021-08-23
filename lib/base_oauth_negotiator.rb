@@ -16,6 +16,12 @@ class BaseOauthNegotiator
     )
   end
 
+  def self.from_hash(hash = nil)
+    new.tap do |oauth_negotiator|
+      oauth_negotiator.access_token = OAuth2::AccessToken.from_hash(oauth_negotiator.client, hash) unless hash.nil?
+    end
+  end
+
   def connected?
     !access_token.nil?
   end

@@ -4,10 +4,7 @@ require 'sinatra/reloader' if development?
 
 require './lib/boot'
 
-require_relative 'connection_center'
-require_relative 'gate_keeper'
-
-GATE_KEEPER = GateKeeper.new
+require_relative 'session_helper'
 
 set :session_secret, ENV.fetch('SESSION_SECRET') { SecureRandom.hex(64) }
 enable :sessions
@@ -19,34 +16,35 @@ end
 require_relative 'auth'
 
 get '/' do
-  connection_center = GATE_KEEPER.current(session)
-  basecamp_negotiator = connection_center&.basecamp
-  gh_negotiator = connection_center&.github
-  accounts = basecamp_negotiator.bc3_accounts if basecamp_negotiator&.connected?
-  gh_connected = gh_negotiator&.connected?
+  session_helper = SessionHelper.new(session)
+  basecamp_oauth = session_helper.basecamp_oauth
+  gh_oauth = session_helper.gh_oauth
+  accounts = basecamp_oauth.bc3_accounts if basecamp_oauth.connected?
+  gh_connected = gh_oauth.connected?
+
   erb :index, locals: { accounts: accounts || [], gh_connected: gh_connected }
 end
 
 get '/bc3-account/:account_id/projects' do
-  negotiator = GATE_KEEPER.current(session)
-  basecamp_negotiator = negotiator.basecamp
+  session_helper = SessionHelper.new(session)
+  basecamp_oauth = session_helper.basecamp_oauth
 
-  redirect '/basecamp/login' unless basecamp_negotiator&.connected?
+  redirect '/basecamp/login' unless basecamp_oauth.connected?
 
-  account = basecamp_negotiator.bc3_accounts.detect { |a| a.id.to_s == params['account_id'] }
+  account = basecamp_oauth.bc3_accounts.detect { |a| a.id.to_s == params['account_id'] }
 
   erb :project_list, locals: { account: account }
 end
 
 get '/bc3-account/:account_id/projects/:project_id' do
-  negotiator = GATE_KEEPER.current(session)
-  basecamp_negotiator = negotiator&.basecamp
-  gh_negotiator = negotiator&.github
+  session_helper = SessionHelper.new(session)
+  basecamp_oauth = session_helper.basecamp_oauth
+  gh_oauth = session_helper.gh_oauth
 
-  redirect '/basecamp/login' unless basecamp_negotiator&.connected?
-  redirect '/github/login' unless gh_negotiator&.connected?
+  redirect '/basecamp/login' unless basecamp_oauth.connected?
+  redirect '/github/login' unless gh_oauth.connected?
 
-  account = basecamp_negotiator.bc3_accounts.detect { |a| a.id.to_s == params['account_id'] }
+  account = basecamp_oauth.bc3_accounts.detect { |a| a.id.to_s == params['account_id'] }
   project = account.projects.detect { |p| p.id.to_s == params['project_id'] }
 
   todolists = project.todoset.todolists
@@ -56,16 +54,16 @@ end
 
 get '/bc3-account/:account_id/projects/:project_id/todolist/:todolist_id' do
   job_id = SecureRandom.uuid
-  negotiator = GATE_KEEPER.current(session)
-  basecamp_negotiator = negotiator&.basecamp
-  gh_negotiator = negotiator&.github
+  session_helper = SessionHelper.new(session)
+  basecamp_oauth = session_helper.basecamp_oauth
+  gh_oauth = session_helper.gh_oauth
 
-  redirect '/basecamp/login' unless basecamp_negotiator&.connected?
-  redirect '/github/login' unless gh_negotiator&.connected?
+  redirect '/basecamp/login' unless basecamp_oauth.connected?
+  redirect '/github/login' unless gh_oauth.connected?
 
   StoreReportableWorker.perform_async(
-    gh_access_token: gh_negotiator.access_token.token,
-    basecamp_access_token: basecamp_negotiator.access_token.token,
+    gh_access_token: gh_oauth.access_token.token,
+    basecamp_access_token: basecamp_oauth.access_token.token,
     account_id: params['account_id'].to_i,
     project_id: params['project_id'].to_i,
     todolist_id: params['todolist_id'].to_i,
@@ -77,20 +75,21 @@ end
 
 get '/bc3-account/:account_id/projects/:project_id/todolist/:todolist_id/job/:job_id' do
   job_result = JobRepository.fetch(params[:job_id])
-  negotiator = GATE_KEEPER.current(session)
-  basecamp_negotiator = negotiator&.basecamp
-  gh_negotiator = negotiator&.github
+  session_helper = SessionHelper.new(session)
+  basecamp_oauth = session_helper.basecamp_oauth
+  gh_oauth = session_helper.gh_oauth
 
-  redirect '/basecamp/login' unless basecamp_negotiator&.connected?
-  redirect '/github/login' unless gh_negotiator&.connected?
+  redirect '/basecamp/login' unless basecamp_oauth.connected?
+  redirect '/github/login' unless gh_oauth.connected?
 
   reportable_todos = (job_result.todos if job_result.is_a? ReportableTodos)
   job_failed = job_result.is_a? JobRepository::FailedJob
 
-  account = basecamp_negotiator.bc3_accounts.detect { |a| a.id.to_s == params['account_id'] }
+  account = basecamp_oauth.bc3_accounts.detect { |a| a.id.to_s == params['account_id'] }
   project = account.projects.detect { |p| p.id.to_s == params['project_id'] }
   todolist = project.todoset.todolists.detect { |tl| tl.id.to_s == params['todolist_id'] }
 
   erb :todolist_show,
-      locals: { project: project, account: account, todolist: todolist, reportable_todos: reportable_todos, job_failed: job_failed }
+      locals: { project: project, account: account, todolist: todolist, reportable_todos: reportable_todos,
+                job_failed: job_failed }
 end

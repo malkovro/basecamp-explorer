@@ -1,11 +1,11 @@
 get '/:service/login' do
-  oauth_negotiator = GATE_KEEPER.present(params['service'], session)
-  redirect oauth_negotiator.authorize_url
+  session_helper = SessionHelper.new(session)
+  redirect session_helper.oauth(params['service']).authorize_url
 end
 
 get '/:service/token' do
-  oauth_negotiator = GATE_KEEPER.let_in(session, params['service'], params['code'])
-
+  session_helper = SessionHelper.new(session)
+  oauth_negotiator = session_helper.fetch_token(params['service'], params['code'])
   return redirect "/#{params['service']}/login" unless oauth_negotiator
 
   redirect '/'
