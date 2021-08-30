@@ -64,11 +64,7 @@ class StoreReportableWorker
     end
   end
 
-  def project
-    account.projects.detect { |p| p.id == project_id }
-  end
-
   def todolist
-    project.todoset.todolists.detect { |tl| tl.id == todolist_id }
+    account.todolist(project_id, todolist_id)
   end
 end
