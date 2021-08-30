@@ -84,12 +84,12 @@ get '/bc3-account/:account_id/projects/:project_id/todolist/:todolist_id/job/:jo
   redirect '/basecamp/login' unless basecamp_oauth.connected?
   redirect '/github/login' unless gh_oauth.connected?
 
-  reportable_todos = (job_result.todos if job_result.is_a? ReportableTodos)
+  todo_lifecycles = (job_result if job_result.is_a? Array)
   job_failed = job_result.is_a? JobRepository::FailedJob
 
   account = basecamp_oauth.bc3_accounts.detect { |a| a.id.to_s == params['account_id'] }
   todolist = account.todolist(params['project_id'], params['todolist_id'])
   erb :todolist_show,
-      locals: { account: account, todolist: todolist, reportable_todos: reportable_todos,
+      locals: { account: account, todolist: todolist, todo_lifecycles: todo_lifecycles,
                 job_failed: job_failed }
 end

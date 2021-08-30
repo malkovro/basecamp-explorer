@@ -19,7 +19,7 @@ class StoreReportableWorker
     bkb_todos = todolist.completed_todos.map(&method(:barkibu_todo))
     reportable_todos = bkb_todos.select(&:reportable?)
 
-    store_result(reportable_todos)
+    store_result reportable_todos.map(&:todo_lifecycle)
   rescue StandardError => e
     p "Something wrong happened: #{e.message}"
     p e.backtrace
@@ -29,7 +29,7 @@ class StoreReportableWorker
   private
 
   def store_result(todos)
-    JobRepository.store id, ReportableTodos.new(todos)
+    JobRepository.store id, todos
   end
 
   def mark_pending

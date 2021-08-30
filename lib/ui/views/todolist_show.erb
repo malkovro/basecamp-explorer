@@ -7,7 +7,7 @@
     <h1><%= "#{todolist.bucket['type']}: #{todolist.bucket['name']} (##{todolist.bucket['id']})" %></h1>
     <h2>🕵🏽 KPIs for <b><%= todolist.title %></b> 📈</h2>
     <p>
-      <% if reportable_todos %>
+      <% if todo_lifecycles %>
         <table>
           <thead>
             <tr>
@@ -19,15 +19,15 @@
             </tr>
           </thead>
           <tbody>
-            <% reportable_todos.each do |todo| %>
+            <% todo_lifecycles.each do |todo| %>
               <tr>
-                <td><%= todo.title %></td>
+                <td><%= todo.name %></td>
                 <td><%= todo.work_started_at %></td>
-                <td><%= todo.latest_release&.[](:created_at) %></td>
-                <td><%= todo.latest_release&.[](:tag_name) %></td>
+                <td><%= todo.released_at %></td>
+                <td><%= todo.release_version %></td>
                 <td>
                   <% todo.pull_requests.each do |pr| %>
-                    <a href=<%= pr.html_url%>><%= "##{pr.number}" %></a>&nbsp;
+                      <a href=<%= pr[:link]%>><%= "#{pr[:repository]}##{pr[:number]}" %></a>&nbsp;
                   <% end %>
                 </td>
               </tr>
