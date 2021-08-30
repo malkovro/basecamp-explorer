@@ -24,6 +24,8 @@ class StoreReportableWorker
     p "Something wrong happened: #{e.message}"
     p e.backtrace
     mark_failed
+  ensure
+    PseudoCache.clean
   end
 
   private

@@ -1,8 +1,10 @@
 module Github
   class Commits
-    def self.singleton_for(client, repository)
-      @instances ||= {}
-      @instances[repository] ||= new(client.access_token, repository)
+    class << self
+      def singleton_for(client, repository)
+        PseudoCache.instance[:commits_instance] ||= {}
+        PseudoCache.instance[:commits_instance][repository] ||= new(client.access_token, repository)
+      end
     end
 
     attr_reader :client, :access_token

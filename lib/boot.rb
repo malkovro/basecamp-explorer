@@ -6,6 +6,7 @@ require 'httparty'
 require_relative 'version'
 
 require_relative 'config'
+require_relative 'pseudo_cache'
 
 require_relative 'base_oauth_negotiator'
 require_relative 'basecamp/client'
