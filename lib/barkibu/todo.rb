@@ -43,10 +43,8 @@ module Barkibu
     end
 
     def latest_release
-      return nil unless pull_requests.any?
-
-      @latest_release ||= pull_requests.map(&:release).max do |release_a, release_b|
-        release_a&.[](:created_at) <=> release_b&.[](:created_at)
+      @latest_release ||= pull_requests.filter_map(&:release).max do |release_a, release_b|
+        release_a[:created_at] <=> release_b[:created_at]
       end
     end
   end
