@@ -1,3 +1,4 @@
+require 'active_model'
 require 'dotenv/load'
 require 'oauth2'
 require 'httparty'
