@@ -1,17 +1,24 @@
 version: '3.0'
-
+x-app: &app
+  image: kpi_explorer
+  build: .
+  working_dir: /usr/src/app
+  volumes:
+      - .:/usr/src/app
+      - bundle:/usr/local/bundle
+  depends_on:
+    - redis
 services:
   explorer:
-    build: .
-    working_dir: /usr/src/app
+    <<: *app
     command: 'server'
     ports:
       - 3000:3000
-    volumes:
-      - .:/usr/src/app
-      - bundle:/usr/local/bundle
-    depends_on:
-      - redis
+
+  worker:
+    <<: *app
+    command: bundle exec sidekiq -r ./lib/boot.rb
+
   redis:
     image: redis:alpine
     volumes:
