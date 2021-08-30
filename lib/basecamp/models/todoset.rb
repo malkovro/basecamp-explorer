@@ -5,5 +5,9 @@ module Basecamp
 
       fetch_list(todolists_url, Todolist)
     end
+
+    def archived_todolists
+      fetch_list(todolists_url, Todolist, status: :archived)
+    end
   end
 end

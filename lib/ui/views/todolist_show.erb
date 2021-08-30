@@ -4,7 +4,7 @@
     <title>Basecamp KPI Extractor</title>
   </head>
   <body>
-    <h1>Project <%= "#{project.name} (##{project.id})" %></h1>
+    <h1><%= "#{todolist.bucket['type']}: #{todolist.bucket['name']} (##{todolist.bucket['id']})" %></h1>
     <h2>🕵🏽 KPIs for <b><%= todolist.title %></b> 📈</h2>
     <p>
       <% if reportable_todos %>

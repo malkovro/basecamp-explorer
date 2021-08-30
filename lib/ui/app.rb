@@ -48,8 +48,10 @@ get '/bc3-account/:account_id/projects/:project_id' do
   project = account.projects.detect { |p| p.id.to_s == params['project_id'] }
 
   todolists = project.todoset.todolists
+  archived_todolists = project.todoset.archived_todolists
 
-  erb :project_show, locals: { project: project, account: account, todolists: todolists }
+  erb :project_show,
+      locals: { project: project, account: account, todolists: todolists, archived_todolists: archived_todolists }
 end
 
 get '/bc3-account/:account_id/projects/:project_id/todolist/:todolist_id' do
@@ -86,10 +88,8 @@ get '/bc3-account/:account_id/projects/:project_id/todolist/:todolist_id/job/:jo
   job_failed = job_result.is_a? JobRepository::FailedJob
 
   account = basecamp_oauth.bc3_accounts.detect { |a| a.id.to_s == params['account_id'] }
-  project = account.projects.detect { |p| p.id.to_s == params['project_id'] }
-  todolist = project.todoset.todolists.detect { |tl| tl.id.to_s == params['todolist_id'] }
-
+  todolist = account.todolist(params['project_id'], params['todolist_id'])
   erb :todolist_show,
-      locals: { project: project, account: account, todolist: todolist, reportable_todos: reportable_todos,
+      locals: { account: account, todolist: todolist, reportable_todos: reportable_todos,
                 job_failed: job_failed }
 end

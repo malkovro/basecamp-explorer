@@ -9,7 +9,13 @@
     <p>
       <ul>
         <% todolists.each do |todolist| %>
-        <li><a href=<%= "/bc3-account/#{account.id}/projects/#{project.id}/todolist/#{todolist.id}" %>><%= todolist.title %></a></li>
+          <li><a href=<%= "/bc3-account/#{account.id}/projects/#{project.id}/todolist/#{todolist.id}" %>><%= todolist.title %></a></li>
+        <% end %>
+      </ul>
+      Archived ones:
+      <ul>
+        <% archived_todolists.each do |todolist| %>
+          <li><a href=<%= "/bc3-account/#{account.id}/projects/#{project.id}/todolist/#{todolist.id}" %>><%= todolist.title %></a></li>
         <% end %>
       </ul>
     </p>
